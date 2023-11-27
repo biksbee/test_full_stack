@@ -2,7 +2,7 @@ import { AuthProvider } from "react-admin";
 
 export const authProvider: AuthProvider  = {
     login: ({ username, password }) => {
-        const request = new Request('http://localhost:3000/auth/login', {
+        const request = new Request('http://localhost:3002/auth/login', {
             method: 'POST',
             body: JSON.stringify({ username, password }),
             headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -38,7 +38,7 @@ export const authProvider: AuthProvider  = {
     getPermissions: () => Promise.resolve(),
     getIdentity: async () => {
         const id = JSON.parse(localStorage.getItem('token') ?? '');
-        const request = new Request(`http://localhost:3000/users/${id.id}`, {
+        const request = new Request(`http://localhost:3002/users/${id.id}`, {
             method: 'GET',
             headers: new Headers({ 'Content-Type': 'application/json' }),
         });

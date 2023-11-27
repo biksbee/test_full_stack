@@ -1,27 +1,6 @@
 version: "3.8"
 
 services:
-  main:
-    container_name: main
-    build:
-      context: './api'
-      dockerfile: ./Dockerfile
-    volumes:
-      - .env:/usr/src/app/.env
-    ports:
-      - '3001:3000'
-    depends_on:
-      - postgres
-    restart: always
-  postgres:
-    image: postgres
-    env_file:
-      - .env
-    ports:
-      - "5433:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    restart: always
   web-admin:
     container_name: "web-admin"
     image: "web-admin"
@@ -30,6 +9,26 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - '8083:80'
-
+  main:
+    container_name: main
+    build:
+      context: './server'
+      dockerfile: ./Dockerfile
+    volumes:
+      - .env:/usr/src/app/.env
+    ports:
+      - '3002:3002'
+    depends_on:
+      - postgres
+    restart: always
+  postgres:
+    image: postgres
+    env_file:
+      - ./server/.env
+    ports:
+      - "5435:5435"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
 volumes:
   pgdata:

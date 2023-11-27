@@ -45,7 +45,7 @@ export const dataProvider: DataProvider = {
             range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
             filter: JSON.stringify(params.filter),
         };
-        const url = `http://localhost:3000/${resource}/all?${stringify(query)}`;
+        const url = `http://localhost:3002/${resource}/all?${stringify(query)}`;
         const { json } = await httpClient(url);
         return {
             data: json.data,
@@ -53,7 +53,7 @@ export const dataProvider: DataProvider = {
         };
     },
     getOne: async (resource, params) => {
-        const url = `http://localhost:3000/${resource}/${params.id}`
+        const url = `http://localhost:3002/${resource}/${params.id}`
         const { json } = await httpClient(url);
         return { data: json };
     },
@@ -62,7 +62,7 @@ export const dataProvider: DataProvider = {
         const query = {
             id: JSON.stringify(id),
         };
-        return httpClient(`http://localhost:3000/${resource}/create?${stringify(query)}`, {
+        return httpClient(`http://localhost:3002/${resource}/create?${stringify(query)}`, {
             method: "POST",
             body: JSON.stringify(params.data),
         })
@@ -77,7 +77,7 @@ export const dataProvider: DataProvider = {
         const { id } = params;
         const formData = createPostFormData(params);
         formData.append("id", id);
-        return httpClient(`http://localhost:3000/${resource}/${id}`, {
+        return httpClient(`http://localhost:3002/${resource}/${id}`, {
                 method: "POST",
                 body: formData,
             })
@@ -89,7 +89,7 @@ export const dataProvider: DataProvider = {
             })
     },
     delete: async (resource, params) => {
-        const url = `http://localhost:3000/${resource}/${params.id}`;
+        const url = `http://localhost:3002/${resource}/${params.id}`;
         const { json } = await httpClient(url, {
             method: 'DELETE',
         });
