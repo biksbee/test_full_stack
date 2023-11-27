@@ -1,34 +1,41 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  web-admin:
-    container_name: "web-admin"
-    image: "web-admin"
-    build:
-      context: "./client"
-      dockerfile: ./Dockerfile
+  postgres:
+    image: postgres:14.2
+    restart: always
+    env_file:
+      - .env
     ports:
-      - '8083:80'
-  main:
-    container_name: main
-    build:
-      context: './server'
-      dockerfile: ./Dockerfile
+      - "5432:5432"
     volumes:
-      - .env:/usr/src/app/.env
-    ports:
-      - '3002:3002'
+      - pg_data:/var/lib/postgresql/data/
+      - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+
+  api:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: './api'
     depends_on:
       - postgres
-    restart: always
-  postgres:
-    image: postgres
-    env_file:
-      - ./server/.env
-    ports:
-      - "5435:5435"
     volumes:
-      - pgdata:/var/lib/postgresql/data
-    restart: always
+      - /api/node_modules
+      - ./api:/api
+    ports:
+      - '3001:3000'
+
+  client:
+    build:
+      dockerfile: Dockerfile
+      context: "./client"
+    depends_on:
+      - api
+    volumes:
+      - /client/node_modules
+      - ./client:/app
+    ports:
+      - "3000:3000"
+
 volumes:
-  pgdata:
+  pg_data:
