@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from "../users/entities/user.entity";
+import {EntityManager} from "typeorm";
 
 @Module({
   imports: [
@@ -25,4 +27,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
   ],
 })
-export class DatabaseModule {}
+export class DatabaseModule {
+  constructor(private readonly entityManager: EntityManager) {
+    this.someMethod();
+  }
+
+  async someMethod() {
+    const newUser = new User();
+    newUser.username = 'admin';
+    newUser.password = 'admin';
+    newUser.address = [40.7128, -74.006];
+    await this.entityManager.save(newUser);
+  }
+}
